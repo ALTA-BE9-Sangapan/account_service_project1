@@ -156,7 +156,7 @@ func UserProfile() {
 		case "2":
 			UpdateProfile()
 		case "3":
-			// RiwayatTrans()
+			DeleteProfile()
 		}
 
 		if pilihan == "0" {
@@ -246,6 +246,37 @@ func UpdateProfile() {
 		}
 	}
 
+}
+
+func DeleteProfile() {
+	user := _entities.User{}
+
+	for _, value := range resLogin {
+		fmt.Printf("==== [WARNING] Are you sure you want to delete your account? ====")
+		fmt.Println("\n1. Yes, delete account")
+		fmt.Println("2. No, go back")
+
+		fmt.Print("Masukkan Pilihan : ")
+		fmt.Scanln(&pilihan)
+
+		switch pilihan {
+		case "1":
+			fmt.Println("\nInput your phone number : ")
+			fmt.Scanln(&user.Phone)
+			err := _userController.DeleteAccount(dbConn, value.Phone)
+
+			if err != nil {
+				fmt.Println("\n==== Account Delete Failed ====")
+			} else {
+				fmt.Println("\n==== Account Delete Successful ====")
+				MenuUtama()
+			}
+
+		case "2":
+			UserProfile()
+		}
+
+	}
 }
 
 func Keluar() {

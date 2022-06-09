@@ -97,3 +97,19 @@ func UpdateAddress(db *sql.DB, address string, phone string) error {
 	}
 
 }
+
+func DeleteAccount(db *sql.DB, phone string) error {
+	query, err := db.Prepare(`DELETE from user WHERE phone = ?`)
+
+	if err != nil {
+		fmt.Println("error1", err.Error())
+	}
+
+	_, err1 := query.Exec(phone)
+
+	if err1 != nil {
+		return err1
+	} else {
+		return nil
+	}
+}
