@@ -113,3 +113,24 @@ func DeleteAccount(db *sql.DB, phone string) error {
 		return nil
 	}
 }
+
+func GetOtherbyPhone(db *sql.DB, phone string) ([]_entities.User, error) {
+	query, err := db.Query(`SELECT name, phone, gender, address from user Where phone = ?`, phone)
+
+	if err != nil {
+		fmt.Println("error1", err.Error())
+	}
+
+	var other []_entities.User
+
+	for query.Next() {
+		var data _entities.User
+		err := query.Scan(&data.Name, &data.Phone, &data.Gender, &data.Address)
+
+		if err != nil {
+			fmt.Println("error2", err.Error())
+		}
+		other = append(other, data)
+	}
+	return other, nil
+}

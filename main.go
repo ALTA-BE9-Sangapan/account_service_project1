@@ -157,6 +157,8 @@ func UserProfile() {
 			UpdateProfile()
 		case "3":
 			DeleteProfile()
+		case "4":
+			OtherProfile()
 		}
 
 		if pilihan == "0" {
@@ -276,6 +278,24 @@ func DeleteProfile() {
 			UserProfile()
 		}
 
+	}
+}
+
+func OtherProfile() {
+	other := _entities.User{}
+
+	fmt.Println("\nInput the phone number : ")
+	fmt.Scanln(&other.Phone)
+	resOther, err := _userController.GetOtherbyPhone(dbConn, other.Phone)
+	if err != nil {
+		fmt.Println("\n==== Phone Number Not Found ====")
+	} else {
+		for _, other := range resOther {
+			fmt.Printf("==== Profile of %s ====", other.Name)
+			fmt.Println("\nPhone\t: ", other.Phone)
+			fmt.Println("Gender\t: ", other.Gender)
+			fmt.Println("Address\t: ", other.Address)
+		}
 	}
 }
 
