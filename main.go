@@ -26,14 +26,14 @@ func MenuUtama() {
 
 	// Menu Utama
 
-	fmt.Println("===== Menu Utama =====")
+	fmt.Println("===== Menu Utama =====\n")
 	fmt.Println("1. Login")
 	fmt.Println("2. Register")
 	fmt.Println("0. Keluar")
 
 	// Pilihan Menu Check
 
-	fmt.Print("Masukkan Pilihan : ")
+	fmt.Print("\nMasukkan Pilihan : ")
 	fmt.Scanln(&pilihan)
 
 	switch pilihan {
@@ -54,7 +54,7 @@ func Login() {
 
 	user := _entities.User{}
 
-	fmt.Println("===== Login =====")
+	fmt.Println("===== Login =====\n")
 	fmt.Println("Masukkan No. HP :")
 	fmt.Scanln(&user.Phone)
 	fmt.Println("Masukkan Password :")
@@ -71,18 +71,18 @@ func UserMenu(phone string, pass string) {
 	resLogin, err = _controller.GetUserbyPhone(dbConn, phone, pass)
 
 	if err != nil || resLogin == nil {
-		fmt.Println("===== Silakan cek kembali No. HP dan Password =====")
+		fmt.Println("===== Silakan cek kembali No. HP dan Password =====\n")
 	}
 
 	for _, value := range resLogin {
 		for pilihan != "0" {
 			fmt.Println("===== Selamat Datang,", value.Name, "=====")
-			fmt.Println("===== Menu User =====")
+			fmt.Println("===== Menu User =====\n")
 			fmt.Println("1. Profil User")
 			fmt.Println("2. Menu Transaksi")
 			fmt.Println("3. Riwayat Transaksi")
 			fmt.Println("0. Kembali ke Menu Utama")
-			fmt.Print("Masukkan Pilihan : ")
+			fmt.Print("\nMasukkan Pilihan : ")
 
 			fmt.Scanln(&pilihan)
 
@@ -92,14 +92,14 @@ func UserMenu(phone string, pass string) {
 			case "2":
 				MenuTrans()
 			case "3":
-				// RiwayatTrans()
+				HistoryTrans()
 			}
 
 			if pilihan == "0" {
-				fmt.Println("===== Kembali ke menu utama? =====")
+				fmt.Println("===== Kembali ke menu utama? =====\n")
 				fmt.Println("1. Tetap di halaman")
 				fmt.Println("2. Kembali ke menu utama")
-				fmt.Print("Masukkan Pilihan : ")
+				fmt.Print("\nMasukkan Pilihan : ")
 				fmt.Scanln(&pilihan)
 
 				if pilihan == "2" {
@@ -115,7 +115,7 @@ func Register() {
 
 	newUser := _entities.User{}
 
-	fmt.Println("===== Registrasi =====")
+	fmt.Println("===== Registrasi =====\n")
 	fmt.Println("Masukkan Nama :")
 	fmt.Scanln(&newUser.Name)
 	fmt.Println("Masukkan No. HP :")
@@ -130,7 +130,7 @@ func Register() {
 	err := _controller.CreateUser(dbConn, newUser)
 
 	if err != nil {
-		fmt.Println("===== Nomor HP sudah terdaftar =====")
+		fmt.Println("\n===== Nomor HP sudah terdaftar =====")
 	} else {
 		fmt.Println("===== Registrasi berhasil =====")
 	}
@@ -139,13 +139,13 @@ func Register() {
 func UserProfile() {
 	resLogin, err = _controller.GetUserbyPhone(dbConn, phone, pass)
 	for pilihan != "0" {
-		fmt.Println("===== Profile Menu =====")
+		fmt.Println("===== Profile Menu =====\n")
 		fmt.Println("1. Read Profile")
 		fmt.Println("2. Update Profile")
 		fmt.Println("3. Delete Profile")
 		fmt.Println("4. Other Users Profile")
 		fmt.Println("0. Kembali ke Menu User")
-		fmt.Print("Masukkan Pilihan : ")
+		fmt.Print("\nMasukkan Pilihan : ")
 
 		fmt.Scanln(&pilihan)
 
@@ -161,10 +161,10 @@ func UserProfile() {
 		}
 
 		if pilihan == "0" {
-			fmt.Println("===== Kembali ke menu user? =====")
+			fmt.Println("===== Kembali ke menu user? =====\n")
 			fmt.Println("1. Tetap di halaman")
 			fmt.Println("2. Kembali ke menu user")
-			fmt.Print("Masukkan Pilihan : ")
+			fmt.Print("\nMasukkan Pilihan : ")
 			fmt.Scanln(&pilihan)
 
 			if pilihan == "2" {
@@ -178,7 +178,7 @@ func UserProfile() {
 func ReadProfile() {
 	resLogin, err = _controller.GetUserbyPhone(dbConn, phone, pass)
 	for _, value := range resLogin {
-		fmt.Printf("===== Profile of %s =====", value.Name)
+		fmt.Printf("===== Profile of %s =====\n", value.Name)
 		fmt.Println("\nPhone\t: ", value.Phone)
 		fmt.Println("Gender\t: ", value.Gender)
 		fmt.Println("Address\t: ", value.Address)
@@ -282,21 +282,22 @@ func DeleteProfile() {
 }
 
 func OtherProfile() {
-	other := _entities.User{}
 
+	var otherPhone string
 	fmt.Println("\nInput the phone number : ")
-	fmt.Scanln(&other.Phone)
+	fmt.Scanln(&otherPhone)
 
-	resOther, err := _controller.GetOtherbyPhone(dbConn, other.Phone)
+	resOther, err := _controller.GetOtherbyPhone(dbConn, otherPhone)
 	if err == nil {
-		fmt.Println("\n===== Phone Number Not Found =====")
-	} else {
 		for _, other := range resOther {
 			fmt.Printf("===== Profile of %s =====", other.Name)
 			fmt.Println("\nPhone\t: ", other.Phone)
 			fmt.Println("Gender\t: ", other.Gender)
 			fmt.Println("Address\t: ", other.Address)
 		}
+
+	} else {
+		fmt.Println("\n===== Phone Number Not Found =====")
 	}
 }
 
@@ -320,7 +321,7 @@ func MenuTrans() {
 		case "1":
 			TopUp()
 		case "2":
-			// Transfer()
+			Transfer()
 		}
 		if pilihan == "0" {
 			fmt.Println("===== Kembali ke menu user? =====")
@@ -348,7 +349,7 @@ func TopUp() {
 		newBal, err := _controller.GetNewBalance(dbConn, phone)
 
 		if err != nil || newBal == nil {
-			fmt.Println("===== Silakan cek kembali No. HP dan Password =====")
+			fmt.Println("===== Balance Not Found =====")
 		}
 
 		for _, value := range newBal {
@@ -360,9 +361,104 @@ func TopUp() {
 	}
 }
 
-// func Transfer() {
+func Transfer() {
+	var receiver string
+	var transfer int
+	var pass1 string
+	fmt.Println("\nInsert reciver phone number : ")
+	fmt.Scanln(&receiver)
+	fmt.Println("\nInsert amount to transfer : ")
+	fmt.Scanln(&transfer)
+	fmt.Println("\nInsert your password : ")
+	fmt.Scanln(&pass1)
 
-// }
+	_, err1 := _controller.GetUserbyPhone(dbConn, phone, pass1)
+
+	if err1 != nil {
+		fmt.Println("\n===== Please Check Your Password Again =====")
+	} else {
+		err := _controller.Transfer(dbConn, receiver, transfer, phone)
+		if err != nil {
+			fmt.Println("\n===== Please Check Receiver Number or Your Balance Again =====")
+		} else {
+			newBal, err := _controller.GetNewBalance(dbConn, phone)
+
+			if err != nil || newBal == nil {
+				fmt.Println("===== Balance Not Found =====")
+			}
+
+			for _, value := range newBal {
+				fmt.Println("===== Transfer Successful =====")
+				fmt.Printf("\n===== Your New Balance is : %v =====\n", value.Balance)
+				MenuTrans()
+			}
+		}
+	}
+}
+
+func HistoryTrans() {
+	_, err := _controller.GetBalancebyPhone(dbConn, phone)
+	if err != nil {
+		fmt.Println("\n===== Balance Not Found =====")
+	} else {
+
+		fmt.Println("===== Transaction History =====")
+		fmt.Println("\n1. Top-Up")
+		fmt.Println("2. Transfer")
+		fmt.Println("0. Kembali ke menu user")
+
+		fmt.Print("\nMasukkan Pilihan : ")
+		fmt.Scanln(&pilihan)
+
+		switch pilihan {
+		case "1":
+			HistoryTopUp()
+			HistoryTrans()
+		case "2":
+			HistoryTransfer()
+			HistoryTrans()
+		}
+		if pilihan == "0" {
+			fmt.Println("===== Kembali ke menu user? =====\n")
+			fmt.Println("1. Tetap di halaman")
+			fmt.Println("2. Kembali ke menu user")
+			fmt.Print("\nMasukkan Pilihan : ")
+			fmt.Scanln(&pilihan)
+
+			if pilihan == "2" {
+				UserMenu(phone, pass)
+			}
+		}
+	}
+}
+
+func HistoryTopUp() {
+	fmt.Printf("===== Top-Up History =====\n")
+	HisTopUp, err := _controller.HistoryTopUp(dbConn, phone)
+	if err != nil {
+		fmt.Printf("===== Top-Up History Not Found =====")
+	} else {
+		for _, value := range HisTopUp {
+
+			fmt.Print("\nTop-up Amount : ", value.TopUpBalance)
+			fmt.Println("\t || \tDate : ", value.CreatedAt)
+		}
+	}
+}
+
+func HistoryTransfer() {
+	fmt.Printf("===== Transfer History =====\n")
+	Histransfer, err := _controller.HistoryTransfer(dbConn, phone)
+	if err != nil {
+		fmt.Printf("===== Transfer History Not Found =====")
+	} else {
+		for _, value := range Histransfer {
+			fmt.Print("\nReceiver : ", value.ReceiverPhone)
+			fmt.Print("\t || \tTransfer Amount : ", value.TransferBalance)
+			fmt.Println("\t || \tDate : ", value.CreatedAt)
+		}
+	}
+}
 
 func Keluar() {
 	fmt.Println("===== Keluar dari aplikasi? =====")
