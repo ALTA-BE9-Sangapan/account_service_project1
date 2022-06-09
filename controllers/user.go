@@ -99,23 +99,17 @@ func UpdateAddress(db *sql.DB, address string, phone string) error {
 }
 
 func DeleteAccount(db *sql.DB, phone string) error {
-	query, err := db.Prepare(`DELETE from user WHERE phone = ?`)
+	_, err := db.Query(`DELETE from user WHERE phone = '?'`, phone)
 
 	if err != nil {
-		fmt.Println("error1", err.Error())
-	}
-
-	_, err1 := query.Exec(phone)
-
-	if err1 != nil {
-		return err1
+		return err
 	} else {
 		return nil
 	}
 }
 
 func GetOtherbyPhone(db *sql.DB, phone string) ([]_entities.User, error) {
-	query, err := db.Query(`SELECT name, phone, gender, address from user Where phone = ?`, phone)
+	query, err := db.Query(`SELECT name, phone, gender, address from user WHERE phone = ? AND phone is not null`, phone)
 
 	if err != nil {
 		fmt.Println("error1", err.Error())

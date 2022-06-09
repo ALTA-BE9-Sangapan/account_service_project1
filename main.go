@@ -91,7 +91,7 @@ func UserMenu(phone string, pass string) {
 			case "1":
 				UserProfile()
 			case "2":
-				// MenuTrans()
+				MenuTrans()
 			case "3":
 				// RiwayatTrans()
 			}
@@ -286,6 +286,7 @@ func OtherProfile() {
 
 	fmt.Println("\nInput the phone number : ")
 	fmt.Scanln(&other.Phone)
+
 	resOther, err := _userController.GetOtherbyPhone(dbConn, other.Phone)
 	if err != nil {
 		fmt.Println("\n==== Phone Number Not Found ====")
@@ -298,6 +299,52 @@ func OtherProfile() {
 		}
 	}
 }
+
+func MenuTrans() {
+	user := _entities.User{}
+
+	resBal, err := _userController.GetBalancebyPhone(dbConn, user.Phone)
+	if err != nil {
+		fmt.Println("\n==== Balance Not Found ====")
+	} else {
+		for _, user := range resBal {
+			fmt.Println("===== Transaction Menu =====")
+			fmt.Printf("===== Your Current Balance is : %d =====", user.Balance)
+		}
+		fmt.Println("\n1. Top-Up")
+		fmt.Println("2. Transfer")
+		fmt.Println("0. Kembali ke menu user")
+
+		fmt.Print("Masukkan Pilihan : ")
+		fmt.Scanln(&pilihan)
+
+		switch pilihan {
+		case "1":
+			// TopUp()
+		case "2":
+			// Transfer()
+		}
+		if pilihan == "0" {
+			fmt.Println("===== Kembali ke menu user? =====")
+			fmt.Println("1. Tetap di halaman")
+			fmt.Println("2. Kembali ke menu user")
+			fmt.Print("Masukkan Pilihan : ")
+			fmt.Scanln(&pilihan)
+
+			if pilihan == "2" {
+				UserMenu(phone, pass)
+			}
+		}
+	}
+}
+
+// func TopUp() {
+
+// }
+
+// func Transfer() {
+
+// }
 
 func Keluar() {
 	fmt.Println("===== Keluar dari aplikasi? =====")
