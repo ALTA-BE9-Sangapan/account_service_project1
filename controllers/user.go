@@ -1,47 +1,48 @@
 package controllers
 
 import (
-	"errors"
 	"fmt"
-	"project1/entities"
+	_entities "project1/entities"
 
-	"gorm.io/gorm"
+	"database/sql"
 )
 
-func CreateUser(db *gorm.DB, newUser entities.User) error {
-	result := db.Create(&newUser)
+func CreateUser(db *sql.DB, newUser _entities.User) error {
 
-	if result.Error != nil {
-		return result.Error
+	var query = (`INSERT INTO user (Name, Phone, Password, Balance, Gender, Address) VALUES (?, ?, ?, 0, ?, ?)`)
+	insert, errPrepare := db.Prepare(query)
+
+	if errPrepare != nil {
+		return errPrepare
 	}
 
-	if result.RowsAffected == 0 {
-		return errors.New("insert failed")
-	}
+	_, err := insert.Exec(newUser.Name, newUser.Phone, newUser.Password, newUser.Gender, newUser.Address)
 
-	return nil
+	if err != nil {
+		return err
+	} else {
+		return nil
+	}
 }
 
-func GetUserbyPassword(db *gorm.DB, password string) []entities.User {
-	var users []entities.User
+func GetUserbyPhone(db *sql.DB, phone string, password string) ([]_entities.User, error) {
+	query, err := db.Query(`SELECT name, phone, balance, gender, address FROM user WHERE phone = ? AND password = ?`, phone, password)
 
-	tx := db.Find(&users, "password = ?", password)
-
-	if tx.Error != nil {
-		fmt.Println("error ", tx.Error)
+	if err != nil {
+		fmt.Println("error1", err.Error())
 	}
 
-	return users
-}
+	var user []_entities.User
 
-func GetUserbyID(db *gorm.DB, ID uint) []entities.User {
-	var users []entities.User
+	for query.Next() {
+		var data _entities.User
+		err := query.Scan(&data.Name, &data.Phone, &data.Balance, &data.Gender, &data.Address)
 
-	tx := db.Find(&users, "id = ?", ID)
-
-	if tx.Error != nil {
-		fmt.Println("error ", tx.Error)
+		if err != nil {
+			fmt.Println("error2", err.Error())
+		}
+		user = append(user, data)
 	}
 
-	return users
+	return user, nil
 }
