@@ -46,3 +46,54 @@ func GetUserbyPhone(db *sql.DB, phone string, password string) ([]_entities.User
 
 	return user, nil
 }
+
+func UpdateName(db *sql.DB, name string, phone string) error {
+	query, err := db.Prepare(`UPDATE user SET name = ? WHERE phone = ?`)
+
+	if err != nil {
+		fmt.Println("error1", err.Error())
+	}
+
+	_, err1 := query.Exec(name, phone)
+
+	if err1 != nil {
+		return err1
+	} else {
+		return nil
+	}
+
+}
+
+func UpdateGender(db *sql.DB, gender string, phone string) error {
+	query, err := db.Prepare(`UPDATE user SET gender = ? WHERE phone = ?`)
+
+	if err != nil {
+		fmt.Println("error1", err.Error())
+	}
+
+	_, err1 := query.Exec(gender, phone)
+
+	if err1 != nil {
+		return err1
+	} else {
+		return nil
+	}
+
+}
+
+func UpdateAddress(db *sql.DB, address string, phone string) error {
+	query, err := db.Prepare(`UPDATE user SET address = ? WHERE phone = ?`)
+
+	if err != nil {
+		fmt.Println("error1", err.Error())
+	}
+
+	_, err1 := query.Exec(address, phone)
+
+	if err1 != nil {
+		return err1
+	} else {
+		return nil
+	}
+
+}
