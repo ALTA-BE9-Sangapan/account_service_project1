@@ -9,14 +9,14 @@ import (
 
 func CreateUser(db *sql.DB, newUser _entities.User) error {
 
-	var query = (`INSERT INTO user (Name, Phone, Password, Balance, Gender, Address) VALUES (?, ?, ?, 0, ?, ?)`)
+	var query = (`INSERT INTO user (Name, Phone, Password, Balance, Gender, Address) VALUES (?, ?, ?, ?, ?, ?)`)
 	insert, errPrepare := db.Prepare(query)
 
 	if errPrepare != nil {
 		return errPrepare
 	}
 
-	_, err := insert.Exec(newUser.Name, newUser.Phone, newUser.Password, newUser.Gender, newUser.Address)
+	_, err := insert.Exec(newUser.Name, newUser.Phone, newUser.Password, 0, newUser.Gender, newUser.Address)
 
 	if err != nil {
 		return err
@@ -39,7 +39,7 @@ func GetUserbyPhone(db *sql.DB, phone string, password string) ([]_entities.User
 		err := query.Scan(&data.Name, &data.Phone, &data.Balance, &data.Gender, &data.Address)
 
 		if err != nil {
-			fmt.Println("error2", err.Error())
+			fmt.Println("error2getuser", err.Error())
 		}
 		user = append(user, data)
 	}
@@ -109,7 +109,7 @@ func DeleteAccount(db *sql.DB, phone string) error {
 }
 
 func GetOtherbyPhone(db *sql.DB, phone string) ([]_entities.User, error) {
-	query, err := db.Query(`SELECT name, phone, gender, address from user WHERE phone = ? AND phone is not null`, phone)
+	query, err := db.Query(`SELECT name, phone, gender, address from user WHERE phone = ?`, phone)
 
 	if err != nil {
 		fmt.Println("error1", err.Error())
